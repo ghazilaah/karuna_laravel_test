@@ -12,9 +12,14 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all()->sortBy('id');
+        $query = Product::query();
+        if ($request->has('search')) {
+            $query->where('name', 'like', "%{$request->search}%");
+        }
+
+        $products = $query->latest()->paginate();
 
         return view('products.index', compact('products'));
     }

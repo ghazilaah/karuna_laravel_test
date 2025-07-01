@@ -4,6 +4,20 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="fw-bold py-3 mb-4">Products</h4>
 
+        <div class="card mb-2">
+            <form action="{{ route('products.index') }}" method="GET">
+                <h5 class="card-header d-flex justify-content-between align-items-center gap-3">
+                    <input type="text" class="form-control" placeholder="Name" name="search" value="{{ request('search') }}">
+                    <button type="submit" class="btn btn-primary">
+                        Search
+                    </button>
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary">
+                        Reset
+                    </a>
+                </h5>
+            </form>
+        </div>
+
         <div class="card">
             <h5 class="card-header d-flex justify-content-between align-items-center">
                 <span>List of Products</span>
