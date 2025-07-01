@@ -12,7 +12,6 @@
                 </a>
             </h5>
 
-
             <div class="table-responsive text-nowrap">
                 <table class="table">
                     <thead>
@@ -38,15 +37,22 @@
                             </span>
                             </td>
                             <td>
-                                <a class="" href="{{ route('products.show', $product) }}">
-                                    <i class="bx bx-file me-1"></i>Show
-                                </a>
-                                <a class="" href="{{ route('products.edit', $product) }}">
-                                    <i class="bx bx-edit-alt me-1"></i>Edit
-                                </a>
-                                <a class="" href="javascript:void(0);">
-                                    <i class="bx bx-trash me-1"></i>Delete
-                                </a>
+                                <div class="">
+                                    <a href="{{ route('products.show', $product) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bx bx-file me-1"></i>Show
+                                    </a>
+                                    <a href="{{ route('products.edit', $product) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bx bx-edit-alt me-1"></i>Edit
+                                    </a>
+                                    <button type="button"
+                                            class="btn btn-sm btn-outline-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal"
+                                            data-id="{{ $product->id }}"
+                                            data-name="{{ $product->name }}">
+                                        <i class="bx bx-trash me-1"></i>Delete
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     @empty
@@ -61,4 +67,67 @@
     </div>
     <!-- / Content -->
 
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <form method="POST" id="deleteForm">
+                @csrf
+                @method('DELETE')
+                <div class="modal-content">
+                    <div class="modal-body">
+                        Are you sure you want to delete <strong id="productName"></strong>?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    @if(session('success'))
+    <div
+        class="bs-toast toast toast-placement-ex m-2 bg-primary top-0 end-0"
+        id="liveToast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-delay="2000"
+    >
+        <div class="toast-header">
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">{{ session('success') }}</div>
+    </div>
+    @endif
+    <!-- Toast -->
+
+    @push ('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const deleteModal = document.getElementById('deleteModal');
+
+                deleteModal.addEventListener('show.bs.modal', function (event) {
+                    const button = event.relatedTarget;
+                    const id = button.getAttribute('data-id');
+                    const name = button.getAttribute('data-name');
+                    const productName = deleteModal.querySelector('#productName');
+                    productName.textContent = name;
+
+                    const form = deleteModal.querySelector('#deleteForm');
+                    form.action = '/products/' + id;
+                });
+            });
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const toastEl = document.getElementById('liveToast');
+                if (toastEl) {
+                    const toast = new bootstrap.Toast(toastEl);
+                    toast.show();
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>
