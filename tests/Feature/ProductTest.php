@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ProductTest extends TestCase
@@ -50,7 +49,7 @@ class ProductTest extends TestCase
 
     public function test_updates_a_product(): void
     {
-        $product =  Product::factory()->create();
+        $product = Product::factory()->create();
 
         $response = $this->put(route('products.update', $product), [
             'name' => 'Updated Product',
@@ -70,7 +69,7 @@ class ProductTest extends TestCase
 
     public function test_deletes_a_product(): void
     {
-        $product =  Product::factory()->create();
+        $product = Product::factory()->create();
 
         $response = $this->delete(route('products.destroy', $product));
 
